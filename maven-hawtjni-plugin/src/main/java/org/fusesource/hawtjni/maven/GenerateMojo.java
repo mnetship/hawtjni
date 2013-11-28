@@ -187,7 +187,7 @@ public class GenerateMojo extends AbstractMojo {
             public void setTotals(int total) {
             }
             public void setMessage(String message) {
-                getLog().info(message + "Ankit");
+                getLog().info(message);
             }
         });
         try {
