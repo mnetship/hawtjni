@@ -1,0 +1,14 @@
+
+# Developer Links
+
+* [Source Code](source.html)
+* [Building](building.html)
+* [Contributing](contributing.html)
+* [Release Guide](release-guide.html)
+<!-- * [Maven Site Reports](${website_base_url}/versions/${project_version}/maven/) -->
+
+# API Reference
+
+* [`hawtjni-runtime` API](../documentation/api/index.html)
+
+Looking for the website documentation of a different ${project_name} [version](${website_base_url}/versions/index.html)?

@@ -1,0 +1,1 @@
+<h1>${project_name} Blog <a href="index.rss"><img src="${uri("/images/rss.gif")}"/></a></h1>

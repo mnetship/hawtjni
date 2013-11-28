@@ -1,0 +1,29 @@
+
+## Release Preparation Steps
+
+Various documentation changes first (which should be done before the release is cut)
+
+* edit the **${project_id}-website/ext/Website.scala** file and change the **project\_version** values
+* blog about the release by creating an entry in **${project_id}-website/src/blog/releases** 
+* update the changelog.md file, copying and pasting the section the release highlights from the above blog post
+
+## Cutting the release 
+
+* prepare the release
+
+{pygmentize:: text}
+mvn -P release release:prepare 
+{pygmentize}
+
+* perform the release
+
+{pygmentize:: text}
+mvn -P release release:perform
+{pygmentize}
+
+* open [Nexus Staging](http://repository.apache.org/index.html#staging)
+  and close the staged release of #{project_name}
+* now start a vote on the mailing lists and if it passes
+* promote the closed release in nexus
+* announce the release on the [mailing list](index.html)
+* drink beers!

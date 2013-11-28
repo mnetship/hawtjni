@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>HawtJNI Maven Plugin</name>
+  <description>Use HawtJNI from a maven plugin</description>
+  <groupId>org.fusesource.hawtjni</groupId>
+  <artifactId>maven-hawtjni-plugin</artifactId>
+  <version>0.1</version>
+  <goalPrefix>hawtjni</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojos>
+    <mojo>
+      <goal>generate</goal>
+      <description>This goal generates the native source code and a
+autoconf/msbuild based build system needed to 
+build a JNI library for any HawtJNI annotated
+classes in your maven project.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>process-classes</phase>
+      <implementation>org.fusesource.hawtjni.maven.GenerateMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>false</threadSafe>
+      <parameters>
+        <parameter>
+          <name>autogenArgs</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Extra arguments you want to pass to the autogen.sh command.</description>
+        </parameter>
+        <parameter>
+          <name>callbacks</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Set this value to false to disable the callback support in HawtJNI.
+Disabling callback support can substantially reduce the size
+of the generated native library.</description>
+        </parameter>
+        <parameter>
+          <name>classesDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The directory where the java classes files are located.</description>
+        </parameter>
+        <parameter>
+          <name>copyright</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The copyright header template that will be added to the generated source files.
+Use the &apos;%END_YEAR%&apos; token to have it replaced with the current year.</description>
+        </parameter>
+        <parameter>
+          <name>customPackageDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The list of additional files to be included in the package will be
+placed.</description>
+        </parameter>
+        <parameter>
+          <name>encoding</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The text encoding of the files.</description>
+        </parameter>
+        <parameter>
+          <name>forceAutogen</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we force executing the autogen.sh file.</description>
+        </parameter>
+        <parameter>
+          <name>generatedNativeSourceDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The directory where the generated native source files are located.</description>
+        </parameter>
+        <parameter>
+          <name>name</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The base name of the library, used to determine generated file names.</description>
+        </parameter>
+        <parameter>
+          <name>packageDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The directory where the generated build package is located..</description>
+        </parameter>
+        <parameter>
+          <name>packages</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Restrict looking for JNI classes to the specified package.</description>
+        </parameter>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>The maven project.</description>
+        </parameter>
+        <parameter>
+          <name>skipAutogen</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we skip executing the autogen.sh file.</description>
+        </parameter>
+        <parameter>
+          <name>verbose</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we display all the native build output?</description>
+        </parameter>
+        <parameter>
+          <name>windowsBuildTool</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The build tool to use on Windows systems.  Set
+to &apos;msbuild&apos;, &apos;vcbuild&apos;, or &apos;detect&apos;</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <callbacks implementation="boolean" default-value="true"/>
+        <classesDirectory implementation="java.io.File" default-value="${project.build.outputDirectory}"/>
+        <customPackageDirectory implementation="java.io.File" default-value="${basedir}/src/main/native-package"/>
+        <encoding implementation="java.lang.String" default-value="UTF-8"/>
+        <forceAutogen implementation="boolean" default-value="${force-autogen}"/>
+        <generatedNativeSourceDirectory implementation="java.io.File" default-value="${project.build.directory}/generated-sources/hawtjni/native-src"/>
+        <name implementation="java.lang.String" default-value="${project.artifactId}"/>
+        <packageDirectory implementation="java.io.File" default-value="${project.build.directory}/generated-sources/hawtjni/native-package"/>
+        <project implementation="org.apache.maven.project.MavenProject">${project}</project>
+        <skipAutogen implementation="boolean" default-value="${skip-autogen}"/>
+        <verbose implementation="boolean" default-value="${hawtjni-verbose}"/>
+        <windowsBuildTool implementation="java.lang.String" default-value="detect"/>
+      </configuration>
+    </mojo>
+    <mojo>
+      <goal>build</goal>
+      <description>This goal builds the JNI module which was previously
+generated with the generate goal.  It adds the JNI module
+to the test resource path so that unit tests can load 
+the freshly built JNI library.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>generate-test-resources</phase>
+      <implementation>org.fusesource.hawtjni.maven.BuildMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>false</threadSafe>
+      <parameters>
+        <parameter>
+          <name>autogenArgs</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Extra arguments you want to pass to the autogen.sh command.</description>
+        </parameter>
+        <parameter>
+          <name>buildDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The directory where the build will be produced.  It creates a native-build and native-dist directory
+under the specified directory.</description>
+        </parameter>
+        <parameter>
+          <name>configureArgs</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Extra arguments you want to pass to the configure command.</description>
+        </parameter>
+        <parameter>
+          <name>downloadSourcePackage</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>If the source build could not be fully generated, perhaps the autotools
+were not available on this platform, should we attempt to download
+a previously deployed source package and build that?</description>
+        </parameter>
+        <parameter>
+          <name>forceAutogen</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we force executing the autogen.sh file.</description>
+        </parameter>
+        <parameter>
+          <name>forceConfigure</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we force executing the configure command.</description>
+        </parameter>
+        <parameter>
+          <name>libDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The output directory where the built JNI library will placed.  This directory will be added
+to as a test resource path so that unit tests can verify the built JNI library.
+
+The library will placed under the META-INF/native/${platform} directory that the HawtJNI
+Library uses to find JNI libraries as classpath resources.</description>
+        </parameter>
+        <parameter>
+          <name>localRepository</name>
+          <type>org.apache.maven.artifact.repository.ArtifactRepository</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>Local maven repository.</description>
+        </parameter>
+        <parameter>
+          <name>name</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The base name of the library, used to determine generated file names.</description>
+        </parameter>
+        <parameter>
+          <name>nativeSrcDependency</name>
+          <type>org.apache.maven.model.Dependency</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The dependency to download to get the native sources.</description>
+        </parameter>
+        <parameter>
+          <name>nativeSrcUrl</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>URL to where we can down the source package</description>
+        </parameter>
+        <parameter>
+          <name>packageDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Where the unpacked build package is located.</description>
+        </parameter>
+        <parameter>
+          <name>platform</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The platform identifier of this build.  If not specified,
+it will be automatically detected.</description>
+        </parameter>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>The maven project.</description>
+        </parameter>
+        <parameter>
+          <name>remoteArtifactRepositories</name>
+          <type>java.util.List</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>Remote repositories</description>
+        </parameter>
+        <parameter>
+          <name>skipAutogen</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we skip executing the autogen.sh file.</description>
+        </parameter>
+        <parameter>
+          <name>skipConfigure</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we skip executing the configure command.</description>
+        </parameter>
+        <parameter>
+          <name>sourceClassifier</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The classifier of the package archive that will be created.</description>
+        </parameter>
+        <parameter>
+          <name>verbose</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we display all the native build output?</description>
+        </parameter>
+        <parameter>
+          <name>windowsBuildTool</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The build tool to use on Windows systems.  Set
+to &apos;msbuild&apos;, &apos;vcbuild&apos;, or &apos;detect&apos;</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <buildDirectory implementation="java.io.File" default-value="${project.build.directory}"/>
+        <downloadSourcePackage implementation="boolean" default-value="true"/>
+        <forceAutogen implementation="boolean" default-value="${force-autogen}"/>
+        <forceConfigure implementation="boolean" default-value="${force-configure}"/>
+        <libDirectory implementation="java.io.File" default-value="${project.build.directory}/generated-sources/hawtjni/lib"/>
+        <localRepository implementation="org.apache.maven.artifact.repository.ArtifactRepository">${localRepository}</localRepository>
+        <name implementation="java.lang.String" default-value="${project.artifactId}"/>
+        <nativeSrcUrl implementation="java.lang.String" default-value="${native-src-url}"/>
+        <packageDirectory implementation="java.io.File" default-value="${project.build.directory}/generated-sources/hawtjni/native-package"/>
+        <project implementation="org.apache.maven.project.MavenProject">${project}</project>
+        <remoteArtifactRepositories implementation="java.util.List">${project.remoteArtifactRepositories}</remoteArtifactRepositories>
+        <skipAutogen implementation="boolean" default-value="${skip-autogen}"/>
+        <skipConfigure implementation="boolean" default-value="${skip-configure}"/>
+        <sourceClassifier implementation="java.lang.String" default-value="native-src"/>
+        <verbose implementation="boolean" default-value="${hawtjni-verbose}"/>
+        <windowsBuildTool implementation="java.lang.String" default-value="detect"/>
+      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.archiver.manager.ArchiverManager</role>
+          <field-name>archiverManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.artifact.factory.ArtifactFactory</role>
+          <field-name>artifactFactory</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.artifact.resolver.ArtifactResolver</role>
+          <field-name>artifactResolver</field-name>
+        </requirement>
+      </requirements>
+    </mojo>
+    <mojo>
+      <goal>package-jar</goal>
+      <description>This goal allows allows you to package the JNI library created by build goal
+in a JAR which the HawtJNI runtime can unpack when the library needs to be
+loaded.
+
+This platform specific jar is attached with a classifier which matches the
+current platform.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>prepare-package</phase>
+      <implementation>org.fusesource.hawtjni.maven.PackageJarMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>false</threadSafe>
+      <parameters>
+        <parameter>
+          <name>classified</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should a classifier of the native jar be set
+to match the platform?</description>
+        </parameter>
+        <parameter>
+          <name>libDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The output directory where the built JNI library will placed. This
+directory will be added to as a test resource path so that unit tests can
+verify the built JNI library.
+
+The library will placed under the META-INF/native/${platform} directory
+that the HawtJNI Library uses to find JNI libraries as classpath
+resources.</description>
+        </parameter>
+        <parameter>
+          <name>name</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The base name of the library, used to determine generated file names.</description>
+        </parameter>
+        <parameter>
+          <name>osgiPlatforms</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The osgi platforms that the library match for.  Example value:
+osname=MacOS;processor=x86-64</description>
+        </parameter>
+        <parameter>
+          <name>platform</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The platform identifier of this build.  If not specified,
+it will be automatically detected.</description>
+        </parameter>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>The maven project.</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <classified implementation="boolean" default-value="true"/>
+        <libDirectory implementation="java.io.File" default-value="${project.build.directory}/generated-sources/hawtjni/lib"/>
+        <name implementation="java.lang.String" default-value="${project.artifactId}"/>
+        <platform implementation="java.lang.String" default-value="${hawtjni-platform}"/>
+        <project implementation="org.apache.maven.project.MavenProject">${project}</project>
+      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.archiver.manager.ArchiverManager</role>
+          <field-name>archiverManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectHelper</role>
+          <field-name>projectHelper</field-name>
+        </requirement>
+      </requirements>
+    </mojo>
+    <mojo>
+      <goal>package-source</goal>
+      <description>This goal creates a source zip file of the native build
+module and attaches it to the build so that it can get 
+deployed.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <phase>package</phase>
+      <implementation>org.fusesource.hawtjni.maven.PackageSourceMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>false</threadSafe>
+      <parameters>
+        <parameter>
+          <name>packageDirectory</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The directory where the generated native files are located..</description>
+        </parameter>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>The maven project.</description>
+        </parameter>
+        <parameter>
+          <name>skipAutogen</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Should we skip executing the autogen.sh file.</description>
+        </parameter>
+        <parameter>
+          <name>sourceClassifier</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>The classifier of the package archive that will be created.</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <packageDirectory implementation="java.io.File" default-value="${project.build.directory}/generated-sources/hawtjni/native-package"/>
+        <project implementation="org.apache.maven.project.MavenProject">${project}</project>
+        <skipAutogen implementation="boolean" default-value="${skip-autogen}"/>
+        <sourceClassifier implementation="java.lang.String" default-value="native-src"/>
+      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.archiver.manager.ArchiverManager</role>
+          <field-name>archiverManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectHelper</role>
+          <field-name>projectHelper</field-name>
+        </requirement>
+      </requirements>
+    </mojo>
+  </mojos>
+  <dependencies>
+    <dependency>
+      <groupId>org.fusesource.hawtjni</groupId>
+      <artifactId>hawtjni-generator</artifactId>
+      <type>jar</type>
+      <version>0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <type>jar</type>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-project</artifactId>
+      <type>jar</type>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-settings</artifactId>
+      <type>jar</type>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-profile</artifactId>
+      <type>jar</type>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <type>jar</type>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-registry</artifactId>
+      <type>jar</type>
+      <version>2.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-9-stable-1</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <type>jar</type>
+      <version>3.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>classworlds</groupId>
+      <artifactId>classworlds</artifactId>
+      <type>jar</type>
+      <version>1.1-alpha-2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <type>jar</type>
+      <version>1.5.15</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-interpolation</artifactId>
+      <type>jar</type>
+      <version>1.12</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-manager</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-repository-metadata</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-provider-api</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <type>jar</type>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-archiver</artifactId>
+      <type>jar</type>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-archiver</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-io</artifactId>
+      <type>jar</type>
+      <version>1.0-alpha-1</version>
+    </dependency>
+  </dependencies>
+</plugin>

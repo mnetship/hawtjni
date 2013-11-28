@@ -1,0 +1,16 @@
+
+:markdown
+  # Released Websites
+  
+  We version our website content along with the project so that you
+  can easily get to the documentation that's most appropriate for the 
+  version of the project your using.
+    
+- for( version <- project_versions )
+  :&markdown
+    * [#{version} Website](${website_base_url}/versions/#{version}/website/index.html)
+
+:markdown
+  # Nightly Development Snapshots
+
+  * [${project_snapshot_version} Website](${website_base_url}/versions/${project_snapshot_version}/website/index.html)
