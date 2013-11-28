@@ -1,0 +1,5 @@
+Building hawtjni
+----------------
+----------------
+
+mvn install
