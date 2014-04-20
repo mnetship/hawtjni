@@ -11,7 +11,7 @@ import net.virtualvoid.sbt.graph.Plugin._
 
 object HawtJNIBuild extends Build {
   val buildOrganization = "hawtjni"
-  val buildVersion = "1.10-shared_ptr"
+  val buildVersion = "1.10.1"
   val buildScalaVersion = "2.10.3"
 
   val buildScalacOptions = Seq("-encoding", "UTF-8", "-unchecked", "-deprecation",
@@ -28,6 +28,9 @@ object HawtJNIBuild extends Build {
     scalacOptions := buildScalacOptions,
     scalacOptions in Test := buildScalacOptions,
     javacOptions ++= Seq("-encoding", "UTF-8"),
+    javacOptions ++= Seq("-source", "1.7"),
+    unmanagedSourceDirectories in Compile := ((javaSource in Compile).value :: (scalaSource in Compile).value :: Nil),
+    unmanagedSourceDirectories in Test := ((javaSource in Test).value :: (scalaSource in Test).value :: Nil),
     exportJars := false,
     resolvers ++= Seq(
       "ibiblio.org-releases" at "http://mirrors.ibiblio.org/maven2/",
@@ -41,8 +44,6 @@ object HawtJNIBuild extends Build {
       "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"))
 
   lazy val eclipseSettings = Seq(
-    unmanagedSourceDirectories in Compile <<= (scalaSource in Compile)(Seq(_)),
-    unmanagedSourceDirectories in Test <<= (scalaSource in Test)(Seq(_)),
     createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource,
     withSource := true)
     
